@@ -9,22 +9,15 @@ suits = ('spades', 'hearts', 'clubs', 'diamonds')
 values = {'2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, '9':9,
             '10':10, 'J':10, 'Q':10, 'K':10, 'A':(1,11)}
 
-class card:
-    '''For storing card information'''
-    def __init__(self, flower, figure):
-        self.flower = flower
-        self.figure = figure
+################################################################################
 
-    def __str__(self):
-        return f'{self.flower}, {self.figure}'
-
-class deck:
+class Deck:
     '''Initialize the card deck and other actions'''
     def __init__(self):
         self.all_cards = []
-        for flower in suits:
+        for suit in suits:
             for figure in values:
-                self.all_cards.append(card(flower,figure))
+                self.all_cards.append((suit,figure))
 
     def shuffle(self):
         shuffle(self.all_cards)
@@ -32,14 +25,16 @@ class deck:
     def draw_card(self):
         return self.all_cards.pop()
 
+################################################################################
+
 def display(cards,person,point):
     clear_output()
     if person == 'player':
         print("Player's card:\n")
     else:
         print("Dealer's card:\n")
-    for n in range(len(cards)):
-        print(f'    {cards[n]}')
+    for item in cards:
+        print(f'    {" ".join(item)}')
     print(f'\nTotal points: {point}\n')
 
 def ask_for_draw(cards):
@@ -57,8 +52,8 @@ def total_point(cards):
     total = 0
     ace = 0
     for n in range(len(cards)):
-        if cards[n].figure != 'A':
-            total += values[cards[n].figure]
+        if cards[n][1] != 'A':
+            total += values[cards[n][1]]
         else:
             ace += 1
     if ace >= 1: # Choose 11 as the value for Ace if the total value does not exceed 21
@@ -77,8 +72,10 @@ def again():
             print('Sorry, but your input is not valid.')
     return game
 
+################################################################################
+
 while True:
-    mydeck = deck()
+    mydeck = Deck()
     mydeck.shuffle()
     player = []
     player_point = 0
@@ -98,7 +95,7 @@ while True:
             print("Player busted!\n")
             win = 'dealer'
 
-    input("\n-------Press Enter to continue.-------\n")
+    input("\n-------Press Enter to continue-------\n")
 
     draw = True
     while len(dealer) < 5 and total_point(player) <= 21 and total_point(dealer) <= 21 and draw:

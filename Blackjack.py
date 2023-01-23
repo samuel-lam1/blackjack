@@ -34,8 +34,8 @@ class Participant:
         self.money = 0
         self.bet_amount = 0
         self.all_cards = []
-        self.all_cards.append(mydeck.all_cards.pop())
-        self.all_cards.append(mydeck.all_cards.pop())
+        self.all_cards.append(mydeck.draw_card())
+        self.all_cards.append(mydeck.draw_card())
 
     def pool_set(self):
         amount = 'x'
@@ -65,7 +65,7 @@ class Participant:
             if choice not in ('Y','y','N','n'):
                 print('Sorry, invalid input, please try again.\n')
         if choice in ['Y','y']:
-            self.all_cards.append(mydeck.all_cards.pop())
+            self.all_cards.append(mydeck.draw_card())
             return True
         return False
 
@@ -97,6 +97,7 @@ def display(person):
     clear_output()
     if person.name != 'Dealer':
         print(f'Total money: ${person.money}, betting amount: ${person.bet_amount}\n')
+        print(f"{dealer.name}'s card:\n    {' '.join(dealer.all_cards[0])}\n    hidden\n")
     print(f"{person.name}'s card:\n")
     for item in person.all_cards:
         print(f'    {" ".join(item)}')

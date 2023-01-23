@@ -51,9 +51,9 @@ def ask_for_draw(cards):
 def total_point(cards):
     total = 0
     ace = 0
-    for n in range(len(cards)):
-        if cards[n][1] != 'A':
-            total += values[cards[n][1]]
+    for item in cards:
+        if item[1] != 'A':
+            total += values[item[1]]
         else:
             ace += 1
     if ace >= 1: # Choose 11 as the value for Ace if the total value does not exceed 21
@@ -95,7 +95,7 @@ while True:
             print("Player busted!\n")
             win = 'dealer'
 
-    input("\n-------Press Enter to continue-------\n")
+    input("\n-------Press Enter to continue.-------\n")
 
     draw = True
     while len(dealer) < 5 and total_point(player) <= 21 and total_point(dealer) <= 21 and draw:

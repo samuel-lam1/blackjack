@@ -23,7 +23,7 @@ class Deck:
         shuffle(self.all_cards)
 
     def draw_card(self):
-        return self.all_cards.pop()
+        return self.all_cards.pop(0)
 
 ################################################################################
 
@@ -40,7 +40,8 @@ class Participant:
     def pool_set(self):
         amount = 'x'
         while amount.isdigit() is False or int(amount) not in range(1,1000001):
-            amount = input("please input the initial amount of player's money (maximum $1,000,000):\n  $")
+            amount = input("please input the initial amount of " +
+                           "player's money (maximum $1,000,000):\n  $")
             if amount.isdigit() is False or int(amount) <= 0:
                 print('Sorry, input is not valid.\n')
             elif int(amount) > 1000000:
@@ -51,7 +52,8 @@ class Participant:
         bet = 'x'
         clear_output()
         while bet.isdigit() is False or int(bet) not in range(1,self.money+1):
-            bet = input(f"Total money: ${self.money}\nPlease input the betting amount (minimum $1):\n  $")
+            bet = input(f"Total money: ${self.money}\nPlease input " +
+                        "the betting amount (minimum $1):\n  $")
             if bet.isdigit() is False or int(bet) <= 0:
                 print('Sorry, input is not valid.\n')
             elif int(bet) > self.money:
@@ -98,7 +100,10 @@ def display(person):
     if person.name != 'Dealer':
         print(f'Total money: ${person.money}, betting amount: ${person.bet_amount}\n')
         print(f"{dealer.name}'s card:\n    {' '.join(dealer.all_cards[0])}\n    hidden\n")
-    print(f"{person.name}'s card:\n")
+    else:
+        print('Dealer must keep taking card until the point meets',
+              'or exceeds 17 or with 5 cards on hand.\n')
+    print(f"{person.name}'s card:")
     for item in person.all_cards:
         print(f'    {" ".join(item)}')
     print(f'\nTotal points: {person.total_point()}\n')
@@ -110,7 +115,8 @@ def check_win(check, deal, play):
         elif play.total_point() < deal.total_point():
             check = deal.name
 
-    print(f"{play.name}'s points: {play.total_point()}, {deal.name}'s points: {deal.total_point()}\n")
+    print(f"{play.name}'s points: {play.total_point()},",
+          f"{deal.name}'s points: {deal.total_point()}\n")
     if check == 'Draw':
         print("It's a draw game!")
     else:
@@ -153,7 +159,8 @@ while True:
     input("\n-------Press Enter to continue.-------\n")
     # Dealer's turn
     take = True
-    while len(dealer.all_cards) < 5 and player.total_point() <= 21 and dealer.total_point() <= 21 and take:
+    while (player.total_point() <= 21 and dealer.total_point() <= 21 and
+           (dealer.total_point() < 17 or take) and len(dealer.all_cards) < 5):
         display(dealer)
         take = dealer.ask_for_take()
         display(dealer)
@@ -162,7 +169,8 @@ while True:
             win = 'Player'
     # Check for winner and ask for continue
     player.update_pool(check_win(win, dealer, player))
-    print(f'Betting amount: ${player.bet_amount}, total money of {player.name} after this round: ${player.money}\n')
+    print(f'Betting amount: ${player.bet_amount}, total money of',
+          f'{player.name} after this round: ${player.money}\n')
     money_last_round = player.money
     if again(player) in ['N','n']:
         break
